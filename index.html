@@ -320,7 +320,7 @@ button{font-family:inherit;cursor:pointer;color:inherit}
 .stats div b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:#ffd7b0}
 
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
-.gcard{position:relative;aspect-ratio:1/1.12;border:none;background:none;padding:0;perspective:800px}
+.gcard{position:relative;aspect-ratio:1/1;border:none;background:none;padding:0;perspective:800px}
 .gcard .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.05,.2,1)}
 .gcard.open .inner{transform:rotateY(180deg)}
 .face{
@@ -338,10 +338,15 @@ button{font-family:inherit;cursor:pointer;color:inherit}
   background:linear-gradient(155deg,rgba(255,196,164,.2),rgba(255,255,255,.07));
   border:1px solid rgba(255,206,180,.3);
 }
+.face.front img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  border-radius:15px;pointer-events:none;
+  -webkit-user-drag:none;
+}
 .gcard.matched .face.front{
   background:linear-gradient(155deg,rgba(255,215,160,.34),rgba(255,140,168,.22));
-  border-color:rgba(255,215,160,.65);
-  box-shadow:0 0 0 1.5px rgba(255,215,160,.55),0 0 26px rgba(255,170,140,.4)
+  border-color:rgba(255,215,160,.75);
+  box-shadow:0 0 0 2px rgba(255,215,160,.7),0 0 26px rgba(255,170,140,.45)
 }
 .gcard.matched{animation:pop .4s ease}
 @keyframes pop{50%{transform:scale(1.07)}}
@@ -826,8 +831,7 @@ const CONFIG = {
   // 没有 date 的条目会显示 when 里的文字（比如"婚礼那天"）
   // ⚠️ 订婚 / 婚礼 / 旅行 的具体日期你还没给我，所以先不写日期，你给我日期我补上
   memories: [
-    { date:"2022-09-28", title:"第一次见面", emoji:"👋", tone:3, photo:"",
-      text:"那天之前，你只是别人嘴里提到的一个人。那天之后，你变成了我每天都要见到的人。" },
+    { date:"2022-09-28", title:"第一次见面", emoji:"👋", tone:3, photo:"photos/first.jpg", text:"" },
     { date:"2022-10-24", title:"我们在一起了", emoji:"🌱", tone:0, photo:"photos/2022.jpg", pos:"50% 55%",
       text:"从这天起，我的日历上多了一个要记一辈子的日子。" },
     { date:"2023-10-24", title:"第一年", emoji:"🎂", tone:1, photo:"photos/2023.jpg", pos:"50% 32%",
@@ -848,14 +852,14 @@ const CONFIG = {
       text:"今天是你生日。这份小东西是我偷偷做的，剩下的日子，我陪你过。" }
   ],
 
-  // 小游戏：6 对卡片，每对配一句话
+  // 小游戏：6 对卡片，翻开是照片，配对成功给一句话
   pairs: [
-    { icon:"🌙", name:"半夜的一句", line:"「你睡了吗？」这四个字，我打出过很多次。" },
-    { icon:"☕", name:"每天的那句", line:"第一句总是吃了吗，最后一句总是早点睡。" },
-    { icon:"🎬", name:"一起看的电影", line:"看什么其实不重要，你在旁边就行。" },
-    { icon:"✈️", name:"一起出门", line:"去哪儿都行，别一个人去。" },
-    { icon:"🍰", name:"你的生日", line:"一年里我最怕搞砸的一天，也是我最期待的一天。" },
-    { icon:"🏠", name:"回家", line:"有你在的地方，才叫回家。" }
+    { photo:"photos/first.jpg",    pos:"50% 20%", name:"第一次见面", line:"那天你在给我烤肉，头都没抬。我在对面看了你很久。" },
+    { photo:"photos/2022.jpg",     pos:"50% 50%", name:"那天的自拍", line:"坐在路边拍了好久，最后留下的是这张鞋子和手机。" },
+    { photo:"photos/2023.jpg",     pos:"50% 26%", name:"生日眼镜",   line:"戴着这副傻眼镜，你笑得眼睛都快没了。" },
+    { photo:"photos/2025.jpg",     pos:"48% 50%", name:"凑过来",     line:"你还是会这样突然凑过来，亲我一下。" },
+    { photo:"photos/wedding.jpg",  pos:"50% 44%", name:"婚礼那天",   line:"囍字底下，你闭着眼睛。这一幕我大概会记一辈子。" },
+    { photo:"photos/vacation.jpg", pos:"50% 55%", name:"一起去看海", line:"你说想去看海，我们就去了。风大得头发全乱，你还是笑。" }
   ],
 
   // 首页每天轮换的悄悄话
@@ -1238,7 +1242,7 @@ function renderTimeline(){
         <div class="tl-body">
           ${when}
           <h3>${m.title}</h3>
-          <p>${m.text}</p>
+          ${m.text ? `<p>${m.text}</p>` : ''}
         </div>
       </div>
     </article>`;
@@ -1288,7 +1292,7 @@ function shuffle(a){
 
 function buildGame(){
   G.deck = shuffle(
-    CONFIG.pairs.flatMap((p, i) => [{ k:i, icon:p.icon }, { k:i, icon:p.icon }])
+    CONFIG.pairs.flatMap((p, i) => [{ k:i, photo:p.photo, pos:p.pos }, { k:i, photo:p.photo, pos:p.pos }])
   );
   G.open = []; G.matched = 0; G.moves = 0; G.lock = false; G.startedAt = Date.now();
   $('#moves').textContent = '0';
@@ -1299,13 +1303,13 @@ function buildGame(){
     <button class="gcard" data-i="${i}" data-k="${c.k}" aria-label="卡片">
       <div class="inner">
         <div class="face back"></div>
-        <div class="face front">${c.icon}</div>
+        <div class="face front"><img src="${c.photo}" alt="" draggable="false" style="object-position:${c.pos || '50% 50%'}"></div>
       </div>
     </button>`).join('');
 
   const msg = $('#gameMsg');
   msg.className = 'game-msg';
-  msg.innerHTML = '翻开的每一张，都是我想对你说的话。';
+  msg.innerHTML = '翻开的每一张，都是我们真实的照片。';
 
   $$('#grid .gcard').forEach(el => el.addEventListener('click', () => flip(el)));
 }
@@ -1347,7 +1351,7 @@ function showPair(idx){
   const p = CONFIG.pairs[idx];
   const msg = $('#gameMsg');
   msg.className = 'game-msg on';
-  msg.innerHTML = `<b>${p.icon} ${p.name}</b> · ${p.line}`;
+  msg.innerHTML = `<b>${p.name}</b> · ${p.line}`;
 }
 
 function win(){
