@@ -2,8 +2,8 @@
    1. 页面：先等网络最多 2.2 秒，超时就先用缓存渲染，同时后台把新版本存进去。
       → 第一次打开还是要等网络；第二次、第三次打开几乎瞬间出来。
    2. 照片、图标：缓存优先，看过一次就不再下载。
-   改完内容看不到更新时，把下面的 v4 改成 v5 再推一次即可强制刷新。 */
-const CACHE = 'our-story-v4';
+   改完内容看不到更新时，把下面的 v5 改成 v6 再推一次即可强制刷新。 */
+const CACHE = 'our-story-v5';
 const CORE = [
   './',
   './index.html',
@@ -40,11 +40,14 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     e.respondWith(new Promise(resolve => {
       let settled = false;
-      const finish = res => { if (!settled && res) { settled = true; resolve(res); } };
+      const finish = res => { if (!settled && res && res.status) { settled = true; resolve(res); } };
 
-      const timer = setTimeout(() => {
-        caches.match(req).then(hit => finish(hit || caches.match('./index.html')));
-      }, NAV_TIMEOUT);
+      const fromCache = () =>
+        caches.match(req)
+          .then(hit => hit || caches.match('./index.html'))
+          .then(hit => { if (hit) finish(hit); });   // 没有缓存就什么都不做，等网络
+
+      const timer = setTimeout(fromCache, NAV_TIMEOUT);
 
       fetch(req)
         .then(res => {
@@ -54,7 +57,7 @@ self.addEventListener('fetch', e => {
         })
         .catch(() => {
           clearTimeout(timer);
-          caches.match(req).then(hit => finish(hit || caches.match('./index.html')));
+          fromCache();
         });
     }));
     return;
