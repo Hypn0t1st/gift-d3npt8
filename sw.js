@@ -1,8 +1,9 @@
-/* 离线缓存：
-   - 页面（导航请求）走「网络优先」，保证你改完内容她刷新就能看到新版本；
-   - 图标、manifest 走「缓存优先」，第二次打开不用再下载。
-   发了新版本还是看到旧内容时，把下面的 v3 改成 v4 即可强制刷新。 */
-const CACHE = 'our-story-v3';
+/* 缓存策略（针对国内访问 github.io 很慢的情况优化）
+   1. 页面：先等网络最多 2.2 秒，超时就先用缓存渲染，同时后台把新版本存进去。
+      → 第一次打开还是要等网络；第二次、第三次打开几乎瞬间出来。
+   2. 照片、图标：缓存优先，看过一次就不再下载。
+   改完内容看不到更新时，把下面的 v4 改成 v5 再推一次即可强制刷新。 */
+const CACHE = 'our-story-v4';
 const CORE = [
   './',
   './index.html',
@@ -11,6 +12,7 @@ const CORE = [
   './icon-512.png',
   './apple-touch-icon.png'
 ];
+const NAV_TIMEOUT = 2200;
 
 self.addEventListener('install', e => {
   self.skipWaiting();
@@ -25,31 +27,45 @@ self.addEventListener('activate', e => {
   );
 });
 
+function put(req, res) {
+  const copy = res.clone();
+  caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+}
+
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
 
-  // 打开页面：先要网络，失败才用缓存（离线可用）
+  // 页面：2.2 秒内拿得到网络就用网络，拿不到就先给缓存
   if (req.mode === 'navigate') {
-    e.respondWith(
+    e.respondWith(new Promise(resolve => {
+      let settled = false;
+      const finish = res => { if (!settled && res) { settled = true; resolve(res); } };
+
+      const timer = setTimeout(() => {
+        caches.match(req).then(hit => finish(hit || caches.match('./index.html')));
+      }, NAV_TIMEOUT);
+
       fetch(req)
         .then(res => {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
-          return res;
+          clearTimeout(timer);
+          put(req, res);
+          finish(res);
         })
-        .catch(() => caches.match(req).then(hit => hit || caches.match('./index.html')))
-    );
+        .catch(() => {
+          clearTimeout(timer);
+          caches.match(req).then(hit => finish(hit || caches.match('./index.html')));
+        });
+    }));
     return;
   }
 
-  // 静态资源：先要缓存
+  // 静态资源：有缓存直接用
   e.respondWith(
     caches.match(req).then(hit => {
       if (hit) return hit;
       return fetch(req).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+        put(req, res);
         return res;
       });
     })
