@@ -827,39 +827,30 @@ const CONFIG = {
     sign: "永远爱你的 老公"
   },
 
-  // 时光轴：photo 填 "photos/xxx.jpg"；pos 用来调照片的裁切位置（"50% 30%"）
-  // 没有 date 的条目会显示 when 里的文字（比如"婚礼那天"）
-  // ⚠️ 订婚 / 婚礼 / 旅行 的具体日期你还没给我，所以先不写日期，你给我日期我补上
+  // 时光轴：只有日期 + 标题 + 照片，下面不写文字
+  // 没有 date 的条目显示 when 里的字（比如"婚礼那天"）
+  // ⚠️ 订婚 / 婚礼 / 旅行 的具体日期你还没给我，你给我日期我改成真日期
   memories: [
-    { date:"2022-09-28", title:"第一次见面", emoji:"👋", tone:3, photo:"photos/first.jpg", text:"" },
-    { date:"2022-10-24", title:"我们在一起了", emoji:"🌱", tone:0, photo:"photos/2022.jpg", pos:"50% 55%",
-      text:"从这天起，我的日历上多了一个要记一辈子的日子。" },
-    { date:"2023-10-24", title:"第一年", emoji:"🎂", tone:1, photo:"photos/2023.jpg", pos:"50% 32%",
-      text:"戴着这副傻眼镜，你笑得眼睛都快没了。那天的照片我一直留着。" },
-    { date:"2024-10-24", title:"第二年", emoji:"🏃", tone:2, photo:"photos/2024.jpg", pos:"50% 60%",
-      text:"衣服上印着「四季与你」。跑完很累，可一回头看到你，就觉得还好来了。" },
-    { date:"2025-10-24", title:"第三年", emoji:"💛", tone:3, photo:"photos/2025.jpg", pos:"50% 45%",
-      text:"第三年。好多事情都变了，但你还是会这样凑过来，亲我一下。" },
-    { when:"捧着花的那天", title:"捧着花去接你", emoji:"💐", tone:4, photo:"photos/engage.jpg", pos:"50% 42%",
-      text:"一大束花，一路走。照片里我一直在看你，你可能没发现。" },
-    { when:"婚礼那天", title:"我们结婚了", emoji:"囍", tone:5, photo:"photos/wedding.jpg", pos:"50% 45%",
-      text:"囍字底下，你闭着眼睛。这一幕我大概会记一辈子。" },
-    { when:"婚礼那天 · 敬酒", title:"满屋子的红", emoji:"🧧", tone:0, photo:"photos/wedding2.jpg", pos:"50% 38%",
-      text:"敬酒服、红双喜、满屋子的热闹。那天你笑得特别好看。" },
-    { when:"一起去看海", title:"去看海", emoji:"🌊", tone:1, photo:"photos/vacation.jpg", pos:"50% 55%",
-      text:"你说想去看海，我们就去了。风大得头发全乱，你还是笑。" },
-    { date:"2026-10-28", title:"今天", emoji:"🎁", tone:2, photo:"",
-      text:"今天是你生日。这份小东西是我偷偷做的，剩下的日子，我陪你过。" }
+    { date:"2022-09-28", title:"第一次见面",   photo:"photos/first.webp",    w:622, h:820 },
+    { date:"2022-10-24", title:"我们在一起了", photo:"photos/2022.webp",     w:615, h:820 },
+    { date:"2023-10-24", title:"第一年",       photo:"photos/2023.webp",     w:615, h:820 },
+    { date:"2024-10-24", title:"第二年",       photo:"photos/2024.webp",     w:615, h:820 },
+    { date:"2025-10-24", title:"第三年",       photo:"photos/2025.webp",     w:820, h:614 },
+    { when:"捧着花的那天", title:"捧着花去接你", photo:"photos/engage.webp", w:820, h:548 },
+    { when:"婚礼那天",     title:"我们结婚了",   photo:"photos/wedding.webp",  w:546, h:820 },
+    { when:"婚礼那天 · 敬酒", title:"满屋子的红", photo:"photos/wedding2.webp", w:820, h:546 },
+    { when:"一起去看海",   title:"去看海",       photo:"photos/vacation.webp", w:615, h:820 },
+    { date:"2026-10-28", title:"今天", emoji:"🎁" }
   ],
 
-  // 小游戏：6 对卡片，翻开是照片，配对成功给一句话
+  // 小游戏：6 对卡片，翻开是照片（用的是缩略图，很小，加载快）
   pairs: [
-    { photo:"photos/first.jpg",    pos:"50% 20%", name:"第一次见面", line:"那天你在给我烤肉，头都没抬。我在对面看了你很久。" },
-    { photo:"photos/2022.jpg",     pos:"50% 50%", name:"那天的自拍", line:"坐在路边拍了好久，最后留下的是这张鞋子和手机。" },
-    { photo:"photos/2023.jpg",     pos:"50% 26%", name:"生日眼镜",   line:"戴着这副傻眼镜，你笑得眼睛都快没了。" },
-    { photo:"photos/2025.jpg",     pos:"48% 50%", name:"凑过来",     line:"你还是会这样突然凑过来，亲我一下。" },
-    { photo:"photos/wedding.jpg",  pos:"50% 44%", name:"婚礼那天",   line:"囍字底下，你闭着眼睛。这一幕我大概会记一辈子。" },
-    { photo:"photos/vacation.jpg", pos:"50% 55%", name:"一起去看海", line:"你说想去看海，我们就去了。风大得头发全乱，你还是笑。" }
+    { photo:"photos/t/first.webp" },
+    { photo:"photos/t/2022.webp" },
+    { photo:"photos/t/2023.webp" },
+    { photo:"photos/t/2025.webp" },
+    { photo:"photos/t/wedding.webp" },
+    { photo:"photos/t/vacation.webp" }
   ],
 
   // 首页每天轮换的悄悄话
@@ -1229,7 +1220,7 @@ function renderTimeline(){
   box.innerHTML = CONFIG.memories.map((m, i) => {
     const hasPhoto = !!m.photo;
     const media = hasPhoto
-      ? `<img src="${m.photo}" alt="${m.title || ''}" loading="lazy" onerror="this.closest('.tl-photo').classList.remove('has-photo');this.remove()">`
+      ? `<img src="${m.photo}" width="${m.w || 800}" height="${m.h || 600}" alt="${m.title || ''}" loading="lazy" decoding="async" onerror="this.closest('.tl-photo').classList.remove('has-photo');this.remove()">`
       : `<span>${m.emoji || '✦'}</span>`;
     const when = m.date ? `<time>${m.date.replace(/-/g, '.')}</time>` : `<time class="soft">${m.when || '那一天'}</time>`;
     return `
@@ -1303,7 +1294,7 @@ function buildGame(){
     <button class="gcard" data-i="${i}" data-k="${c.k}" aria-label="卡片">
       <div class="inner">
         <div class="face back"></div>
-        <div class="face front"><img src="${c.photo}" alt="" draggable="false" style="object-position:${c.pos || '50% 50%'}"></div>
+        <div class="face front"><img src="${c.photo}" alt="" draggable="false" loading="lazy" decoding="async"></div>
       </div>
     </button>`).join('');
 
@@ -1348,10 +1339,10 @@ function flip(el){
 }
 
 function showPair(idx){
-  const p = CONFIG.pairs[idx];
   const msg = $('#gameMsg');
+  const total = CONFIG.pairs.length;
   msg.className = 'game-msg on';
-  msg.innerHTML = `<b>${p.name}</b> · ${p.line}`;
+  msg.innerHTML = `✓ 配上了 <b>${G.matched} / ${total}</b>` + (G.matched === total ? ' · 全部找齐' : '');
 }
 
 function win(){
