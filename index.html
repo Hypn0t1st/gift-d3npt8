@@ -281,16 +281,21 @@ button{font-family:inherit;cursor:pointer;color:inherit}
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
   box-shadow:0 12px 28px rgba(0,0,0,.25);
 }
-.tl-photo{position:relative;height:112px;display:grid;place-items:center;overflow:hidden}
+.tl-photo{position:relative;display:grid;place-items:center;overflow:hidden;min-height:112px}
 .tl-photo:before{
   content:"";position:absolute;width:170px;height:170px;border-radius:50%;
   background:radial-gradient(circle,rgba(255,255,255,.14),transparent 66%);filter:blur(2px)
 }
-.tl-photo span{position:relative;font-size:34px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
-.tl-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tl-photo.has-photo:before{display:none}
+.tl-photo:not(.has-photo){min-height:150px}
+.tl-photo span{position:relative;font-size:42px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.5))}
+.tl-photo img{
+  display:block;width:100%;height:auto;
+  object-fit:cover;object-position:var(--pos,50% 50%);
+}
 .tl-photo:after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 40%,rgba(13,7,22,.72));
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 58%,rgba(13,7,22,.55));
 }
 .tone-0{background:linear-gradient(150deg,#5b2b52,#2b1b46)}
 .tone-1{background:linear-gradient(150deg,#4a2340,#7a3350)}
@@ -300,6 +305,7 @@ button{font-family:inherit;cursor:pointer;color:inherit}
 .tone-5{background:linear-gradient(150deg,#54304a,#2f2141)}
 .tl-body{padding:15px 17px 17px}
 .tl-body time{font-size:10.5px;letter-spacing:.2em;color:rgba(255,215,170,.72);font-variant-numeric:tabular-nums}
+.tl-body time.soft{color:rgba(255,255,255,.4);letter-spacing:.16em}
 .tl-body h3{margin:7px 0 7px;font-size:15.5px;font-weight:600;letter-spacing:.02em}
 .tl-body p{margin:0;font-size:12.8px;line-height:1.85;color:rgba(255,255,255,.58)}
 
@@ -777,7 +783,7 @@ html.still .cover-name,html.still .cover-sub,html.still .cover-days,html.still .
 const CONFIG = {
   herName: "小宝",                  // 她的名字 / 昵称
   myName: "老公",                   // 你的名字（情书落款用）
-  startDate: "2022-09-28",          // 在一起的那一天  YYYY-MM-DD
+  startDate: "2022-10-24",          // 在一起的那一天  YYYY-MM-DD
   birthday: "10-28",                // 公历生日（农历表查不到时兜底）MM-DD
 
   /* 农历生日：九月十九。
@@ -807,7 +813,7 @@ const CONFIG = {
     title: "写给我的小宝",
     paragraphs: [
       "写这封信的时候我在想，要怎么把「生日快乐」这四个字，说得比平常更郑重一点。",
-      "四年了。从 2022 年 9 月 28 日那天到现在，大部分日子都很普通，普通到说出来没什么可讲的——可我就是很喜欢这样的日子。",
+      "四年了。从 2022 年 10 月 24 日那天到现在，大部分日子都很普通，普通到说出来没什么可讲的——可我就是很喜欢这样的日子。",
       "我这个人不太会说漂亮话。能给你的，大概就是往后每一个平常的晚上：一起吃饭，一起散步，一起把日子过成我们的样子。",
       "所以今年，我还是那句老话——",
       "生日快乐，小宝。",
@@ -816,21 +822,29 @@ const CONFIG = {
     sign: "永远爱你的 老公"
   },
 
-  // 时光轴：photo 可以留空（会显示 emoji 渐变卡），也可以填图片路径
-  // ⚠️ 下面这些还是「占位版」：日期是真的，文字是通用版的，
-  //    你把真实的回忆发我，我立刻替换。
+  // 时光轴：photo 填 "photos/xxx.jpg"；pos 用来调照片的裁切位置（"50% 30%"）
+  // 没有 date 的条目会显示 when 里的文字（比如"婚礼那天"）
+  // ⚠️ 订婚 / 婚礼 / 旅行 的具体日期你还没给我，所以先不写日期，你给我日期我补上
   memories: [
-    { date:"2022-09-28", title:"我们在一起了", emoji:"🌱", tone:0, photo:"",
+    { date:"2022-09-28", title:"第一次见面", emoji:"👋", tone:3, photo:"",
+      text:"那天之前，你只是别人嘴里提到的一个人。那天之后，你变成了我每天都要见到的人。" },
+    { date:"2022-10-24", title:"我们在一起了", emoji:"🌱", tone:0, photo:"photos/2022.jpg", pos:"50% 55%",
       text:"从这天起，我的日历上多了一个要记一辈子的日子。" },
-    { date:"2023-09-28", title:"第一年", emoji:"🕯️", tone:1, photo:"",
-      text:"一年过得比我想的快，快到我还没来得及把它记下来。" },
-    { date:"2024-09-28", title:"第二年", emoji:"🍂", tone:2, photo:"",
-      text:"这一年我们好像更熟练了一点，不用猜也知道对方在想什么。" },
-    { date:"2025-09-28", title:"第三年", emoji:"🌙", tone:3, photo:"",
-      text:"开始习惯你在旁边，习惯到差点忘了，这本身也是一种运气。" },
-    { date:"2026-09-28", title:"第四年", emoji:"🏠", tone:4, photo:"",
-      text:"四年了。不敢说我们什么都没变，但我很确定，我还想和你一起过下一年。" },
-    { date:"2026-10-28", title:"今天", emoji:"🎁", tone:5, photo:"",
+    { date:"2023-10-24", title:"第一年", emoji:"🎂", tone:1, photo:"photos/2023.jpg", pos:"50% 32%",
+      text:"戴着这副傻眼镜，你笑得眼睛都快没了。那天的照片我一直留着。" },
+    { date:"2024-10-24", title:"第二年", emoji:"🏃", tone:2, photo:"photos/2024.jpg", pos:"50% 60%",
+      text:"衣服上印着「四季与你」。跑完很累，可一回头看到你，就觉得还好来了。" },
+    { date:"2025-10-24", title:"第三年", emoji:"💛", tone:3, photo:"photos/2025.jpg", pos:"50% 45%",
+      text:"第三年。好多事情都变了，但你还是会这样凑过来，亲我一下。" },
+    { when:"捧着花的那天", title:"捧着花去接你", emoji:"💐", tone:4, photo:"photos/engage.jpg", pos:"50% 42%",
+      text:"一大束花，一路走。照片里我一直在看你，你可能没发现。" },
+    { when:"婚礼那天", title:"我们结婚了", emoji:"囍", tone:5, photo:"photos/wedding.jpg", pos:"50% 45%",
+      text:"囍字底下，你闭着眼睛。这一幕我大概会记一辈子。" },
+    { when:"婚礼那天 · 敬酒", title:"满屋子的红", emoji:"🧧", tone:0, photo:"photos/wedding2.jpg", pos:"50% 38%",
+      text:"敬酒服、红双喜、满屋子的热闹。那天你笑得特别好看。" },
+    { when:"一起去看海", title:"去看海", emoji:"🌊", tone:1, photo:"photos/vacation.jpg", pos:"50% 55%",
+      text:"你说想去看海，我们就去了。风大得头发全乱，你还是笑。" },
+    { date:"2026-10-28", title:"今天", emoji:"🎁", tone:2, photo:"",
       text:"今天是你生日。这份小东西是我偷偷做的，剩下的日子，我陪你过。" }
   ],
 
@@ -1209,18 +1223,20 @@ function startClock(){
 function renderTimeline(){
   const box = $('#timeline');
   box.innerHTML = CONFIG.memories.map((m, i) => {
-    const photo = m.photo
-      ? `<img src="${m.photo}" alt="" onerror="this.remove()">`
-      : '';
+    const hasPhoto = !!m.photo;
+    const media = hasPhoto
+      ? `<img src="${m.photo}" alt="${m.title || ''}" loading="lazy" onerror="this.closest('.tl-photo').classList.remove('has-photo');this.remove()">`
+      : `<span>${m.emoji || '✦'}</span>`;
+    const when = m.date ? `<time>${m.date.replace(/-/g, '.')}</time>` : `<time class="soft">${m.when || '那一天'}</time>`;
     return `
     <article class="tl-item" style="animation-delay:${Math.min(i * 60, 420)}ms">
       <div class="tl-dot"></div>
       <div class="tl-card">
-        <div class="tl-photo tone-${m.tone ?? (i % 6)}">
-          <span>${m.emoji || '✦'}</span>${photo}
+        <div class="tl-photo tone-${m.tone ?? (i % 6)} ${hasPhoto ? 'has-photo' : ''}"${m.pos ? ` style="--pos:${m.pos}"` : ''}>
+          ${media}
         </div>
         <div class="tl-body">
-          <time>${m.date.replace(/-/g, '.')}</time>
+          ${when}
           <h3>${m.title}</h3>
           <p>${m.text}</p>
         </div>
@@ -1486,6 +1502,10 @@ function init(){
   }
   if (params.get('unlock') === '1') unlockLetter();
 
+  // 截图用：滚到指定位置
+  if (params.get('scrollto')){
+    setTimeout(() => { $('#pages').scrollTop = Number(params.get('scrollto')) || 0; }, 600);
+  }
   // 截图用：滚到底部
   if (params.get('scroll') === 'bottom'){
     setTimeout(() => { $('#pages').scrollTop = 99999; }, 500);
@@ -1532,7 +1552,16 @@ function init(){
         'tabL:' + Math.round(g('.tabbar').left), 'tabR:' + Math.round(g('.tabbar').right),
         'pagesW:' + Math.round(g('.pages').width),
         'music:' + (Music.playing ? 1 : 0) + '/' + (actx ? actx.state : '-'),
-        'muted:' + (muted ? 1 : 0)].join(' | ');
+        'muted:' + (muted ? 1 : 0),
+        (() => {
+          const im = document.querySelector('.tl-photo img');
+          if (!im) return 'img:none';
+          const r = im.getBoundingClientRect();
+          const cs = getComputedStyle(im);
+          return 'img:' + Math.round(r.width) + 'x' + Math.round(r.height) +
+                 ' nat:' + im.naturalWidth + 'x' + im.naturalHeight +
+                 ' maxH:' + cs.maxHeight + ' objF:' + cs.objectFit;
+        })()].join(' | ');
       document.title = 'DBG ' + txt;
       const d = document.createElement('div');
       d.style.cssText = 'position:fixed;left:0;top:0;right:0;z-index:9999;background:#000;color:#0f0;font:11px/1.5 monospace;padding:6px;word-break:break-all';
