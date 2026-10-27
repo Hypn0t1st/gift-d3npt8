@@ -690,7 +690,7 @@ html.still .cover-name,html.still .cover-sub,html.still .cover-days,html.still .
           </div>
         </div>
         <div class="grid" id="grid"></div>
-        <div class="game-msg" id="gameMsg">翻开的每一张，都是我们真实发生过的事。</div>
+        <div class="game-msg" id="gameMsg">翻开的每一张，都是我想对你说的话。</div>
         <button class="restart" id="restartBtn">重新开始</button>
       </section>
 
@@ -712,10 +712,10 @@ html.still .cover-name,html.still .cover-sub,html.still .cover-days,html.still .
 
         <div id="letterBody" style="display:none">
           <article class="paper">
-            <h2 id="letterTitle">写给我的小满</h2>
+            <h2 id="letterTitle">写给我的小宝</h2>
             <p class="date" id="letterDate">2026.10.24</p>
             <div id="letterParas"></div>
-            <p class="sign" id="letterSign">永远爱你的 阿哲</p>
+            <p class="sign" id="letterSign">永远爱你的 老公</p>
             <div class="seal">囍</div>
           </article>
 
@@ -774,52 +774,72 @@ html.still .cover-name,html.still .cover-sub,html.still .cover-days,html.still .
    —— 把下面的内容换成你们俩真实的信息就好 ——
    ========================================================================== */
 const CONFIG = {
-  herName: "小满",                 // 她的名字 / 昵称
-  myName: "阿哲",                  // 你的名字
-  startDate: "2021-10-24",         // 在一起的那一天  YYYY-MM-DD
-  birthday: "11-18",               // 她的生日       MM-DD
+  herName: "小宝",                  // 她的名字 / 昵称
+  myName: "老公",                   // 你的名字（情书落款用）
+  startDate: "2022-09-28",          // 在一起的那一天  YYYY-MM-DD
+  birthday: "10-28",                // 公历生日（农历表查不到时兜底）MM-DD
+
+  /* 农历生日：九月十九。
+     下面这张表是「每年农历九月十九对应的公历日期」，已经算好并核对过
+     （用中国农历数据生成，春节日期校验正确）。
+     表只覆盖到 2050 年；超出范围的年份会退回上面的公历生日。 */
+  lunar: {
+    month: 9,
+    day: 19,
+    label: "农历九月十九",
+    map: {
+      2023: "2023-11-02", 2024: "2024-10-21", 2025: "2025-11-08",
+      2026: "2026-10-28", 2027: "2027-10-18", 2028: "2028-11-05",
+      2029: "2029-10-26", 2030: "2030-10-15", 2031: "2031-11-03",
+      2032: "2032-10-22", 2033: "2033-10-11", 2034: "2034-10-30",
+      2035: "2035-10-19", 2036: "2036-11-06", 2037: "2037-10-27",
+      2038: "2038-10-17", 2039: "2039-11-05", 2040: "2040-10-24",
+      2041: "2041-10-13", 2042: "2042-11-01", 2043: "2043-10-21",
+      2044: "2044-11-08", 2045: "2045-10-28", 2046: "2046-10-18",
+      2047: "2047-11-06", 2048: "2048-10-26", 2049: "2049-10-15",
+      2050: "2050-11-03"
+    }
+  },
 
   // 情书
   letter: {
-    title: "写给我的小满",
+    title: "写给我的小宝",
     paragraphs: [
-      "提笔的时候是深夜，你大概已经睡了。我在想，要怎么把「生日快乐」这四个字，说得比平常更郑重一点。",
-      "这一年里我们吵过架，也赌过气，可每次转过身，发现你还在我旁边，我就觉得，好像没什么大不了的。",
-      "我不太会说漂亮话，能给你的，大概就是往后每一个普通的晚上：一起吃饭，一起散步，一起把日子过成我们的样子。",
+      "写这封信的时候我在想，要怎么把「生日快乐」这四个字，说得比平常更郑重一点。",
+      "四年了。从 2022 年 9 月 28 日那天到现在，大部分日子都很普通，普通到说出来没什么可讲的——可我就是很喜欢这样的日子。",
+      "我这个人不太会说漂亮话。能给你的，大概就是往后每一个平常的晚上：一起吃饭，一起散步，一起把日子过成我们的样子。",
       "所以今年，我还是那句老话——",
-      "生日快乐。往后的每一年，我都想在。"
+      "生日快乐，小宝。往后的每一年，我都想在。"
     ],
-    sign: "永远爱你的 阿哲"
+    sign: "永远爱你的 老公"
   },
 
   // 时光轴：photo 可以留空（会显示 emoji 渐变卡），也可以填图片路径
+  // ⚠️ 下面这些还是「占位版」：日期是真的，文字是通用版的，
+  //    你把真实的回忆发我，我立刻替换。
   memories: [
-    { date:"2021-10-24", title:"第一次见面", emoji:"🌙", tone:0, photo:"",
-      text:"那天你穿了件白色的卫衣，我在心里排练了八百遍的开场白，最后只说出来一句「你好」。" },
-    { date:"2021-11-07", title:"第一次一起吃饭", emoji:"🍜", tone:1, photo:"",
-      text:"你把碗里的香菜全挑给我，说「你爱吃」。其实我不爱吃，但我全吃了。" },
-    { date:"2021-12-24", title:"第一个平安夜", emoji:"🎄", tone:2, photo:"",
-      text:"我们挤在人堆里看圣诞树，你冻得手冰凉，我把你的手塞进我口袋里，然后就没再拿出来。" },
-    { date:"2022-05-20", title:"第一个 520", emoji:"🌹", tone:3, photo:"",
-      text:"我准备了很久的礼物，你拆开的时候先笑了，然后眼睛红了。那天我就想，这个女孩我得一直哄着。" },
-    { date:"2022-10-24", title:"一周年", emoji:"🎂", tone:4, photo:"",
-      text:"一整年了。我们还是会在电话里聊到很晚，还是会因为一句傻话笑半天。好像什么都没变，又好像什么都更好了。" },
-    { date:"2023-07-15", title:"第一次一起旅行", emoji:"✈️", tone:5, photo:"",
-      text:"你把行程排得满满当当，我把相机充满电。后来发现，拍得最多的其实是你回头笑的那一瞬间。" },
-    { date:"2024-02-14", title:"一起看的第一场雪", emoji:"❄️", tone:1, photo:"",
-      text:"你伸手接雪花，说「好小啊」，我说「不小，够我看一辈子了」。你骂我土，但笑得很开心。" },
-    { date:"2026-10-24", title:"今天", emoji:"🎁", tone:0, photo:"",
-      text:"今天把这份小心意送给你。往后的日子，我们慢慢写。" }
+    { date:"2022-09-28", title:"我们在一起了", emoji:"🌱", tone:0, photo:"",
+      text:"从这天起，我的日历上多了一个要记一辈子的日子。" },
+    { date:"2023-09-28", title:"第一年", emoji:"🕯️", tone:1, photo:"",
+      text:"一年过得比我想的快，快到我还没来得及把它记下来。" },
+    { date:"2024-09-28", title:"第二年", emoji:"🍂", tone:2, photo:"",
+      text:"这一年我们好像更熟练了一点，不用猜也知道对方在想什么。" },
+    { date:"2025-09-28", title:"第三年", emoji:"🌙", tone:3, photo:"",
+      text:"开始习惯你在旁边，习惯到差点忘了，这本身也是一种运气。" },
+    { date:"2026-09-28", title:"第四年", emoji:"🏠", tone:4, photo:"",
+      text:"四年了。不敢说我们什么都没变，但我很确定，我还想和你一起过下一年。" },
+    { date:"2026-10-28", title:"今天", emoji:"🎁", tone:5, photo:"",
+      text:"今天是你生日。这份小东西是我偷偷做的，剩下的日子，我陪你过。" }
   ],
 
-  // 小游戏：6 对卡片，每对配一句只有你们懂的回忆
+  // 小游戏：6 对卡片，每对配一句话
   pairs: [
-    { icon:"🌙", name:"聊到凌晨", line:"第一次聊天，从下午聊到凌晨两点，你说「再不睡明天起不来了」，然后我们继续聊到了三点。" },
-    { icon:"☕", name:"第一杯咖啡", line:"你说你只喝美式，我记了很久。后来才知道，你其实怕苦，只是想显得很酷。" },
-    { icon:"🎬", name:"第一次看电影", line:"你看哭了，我说有这么感人吗，其实我偷偷把纸巾先递了过去。" },
-    { icon:"🌊", name:"第一次看海", line:"你脱了鞋往水里跑，喊我快跟上。那张照片我设成了壁纸，一直没换。" },
-    { icon:"🍰", name:"第一次给你过生日", line:"蜡烛插歪了，蛋糕有点塌，你说这是你吃过最好吃的一个。" },
-    { icon:"🏠", name:"第一个一起的家", line:"第一晚什么都没置办，两个人坐在地板上吃外卖，你却笑得像住进了城堡。" }
+    { icon:"🌙", name:"半夜的一句", line:"「你睡了吗？」这四个字，我打出过很多次。" },
+    { icon:"☕", name:"每天的那句", line:"第一句总是吃了吗，最后一句总是早点睡。" },
+    { icon:"🎬", name:"一起看的电影", line:"看什么其实不重要，你在旁边就行。" },
+    { icon:"✈️", name:"一起出门", line:"去哪儿都行，别一个人去。" },
+    { icon:"🍰", name:"你的生日", line:"一年里我最怕搞砸的一天，也是我最期待的一天。" },
+    { icon:"🏠", name:"回家", line:"有你在的地方，才叫回家。" }
   ],
 
   // 首页每天轮换的悄悄话
@@ -836,15 +856,15 @@ const CONFIG = {
 
   // 时间胶囊：一封「到日子才能拆」的信，unlock 写 YYYY-MM-DD，过了那天自动打开
   capsule: {
-    unlock: "2027-11-18",
-    title: "一封要等到明年才能拆的信",
+    unlock: "2027-10-18",
+    title: "一封要等到明年生日才能拆的信",
     paragraphs: [
-      "如果你正在读这段话，说明又过了一年，我们又老了一岁，但好像还是老样子——你催我早睡，我赖着不动。",
-      "写这封信的时候，我其实不知道明年会发生什么。也许会换个城市，也许会很忙，也许会吵几次架。",
-      "但我很确定一件事：明年的今天，我还是会坐在这儿，想办法给你弄点新的花样。",
+      "如果你正在读这段话，说明又过了一年。这一年过得怎么样？有没有比去年开心一点？",
+      "写这封信的时候，我其实不知道明年会发生什么。也许会换个地方住，也许会很忙，也许会吵几次架。",
+      "但我很确定一件事：明年你生日这天，我还是会坐在这儿，想办法给你弄点新的花样。",
       "所以，明年见。"
     ],
-    sign: "一年后依然爱你的 阿哲"
+    sign: "一年后依然爱你的 老公"
   },
 
   // 「想你了」按钮每次随机冒出来的一句
@@ -1039,13 +1059,33 @@ function diffParts(){
 }
 function pad(n){ return String(n).padStart(2, '0'); }
 
+function parseYMD(s){
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/* 生日：农历优先（查 CONFIG.lunar.map），表里没有就退回公历 CONFIG.birthday */
 function birthdayInfo(){
-  const [m, d] = CONFIG.birthday.split('-').map(Number);
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  let target = new Date(now.getFullYear(), m - 1, d);
-  const isToday = now.getMonth() === m - 1 && now.getDate() === d;
-  if (target < today) target = new Date(now.getFullYear() + 1, m - 1, d);
+  const map = (CONFIG.lunar && CONFIG.lunar.map) || {};
+  const y0 = today.getFullYear();
+
+  let target = null;
+  for (let y = y0; y <= y0 + 2; y++){
+    const s = map[y];
+    if (!s) continue;
+    const dt = parseYMD(s);
+    if (dt >= today){ target = dt; break; }
+  }
+
+  if (!target){
+    const [m, d] = CONFIG.birthday.split('-').map(Number);
+    target = new Date(y0, m - 1, d);
+    if (target < today) target = new Date(y0 + 1, m - 1, d);
+  }
+
+  const isToday = target.getTime() === today.getTime();
   const days = Math.round((target - today) / 86400000);
   return { days, isToday, target };
 }
@@ -1125,9 +1165,10 @@ function renderHome(){
   $('#sinceText').textContent = `自 ${CONFIG.startDate.replace(/-/g, '.')} 起，每一天都在数`;
 
   const b = birthdayInfo();
+  const bmd = `${b.target.getMonth() + 1} 月 ${b.target.getDate()} 日`;
   $('#bdayText').innerHTML = b.isToday
-    ? '今天就是你的生日 —— <b>生日快乐，我的姑娘</b> 🎉'
-    : `距离你的生日还有 <b>${b.days}</b> 天 · ${b.target.getMonth() + 1} 月 ${b.target.getDate()} 日`;
+    ? `今天就是你的生日 —— <b>生日快乐，${CONFIG.herName}</b> 🎉`
+    : `距离你的生日还有 <b>${b.days}</b> 天 · ${bmd}（${CONFIG.lunar.label}）`;
 
   const ymd = ymdTogether();
   $('#ymdText').innerHTML = `在一起 <b>${ymd.y}</b> 年 <b>${ymd.m}</b> 个月 <b>${ymd.d}</b> 天`;
@@ -1245,7 +1286,7 @@ function buildGame(){
 
   const msg = $('#gameMsg');
   msg.className = 'game-msg';
-  msg.innerHTML = '翻开的每一张，都是我们真实发生过的事。';
+  msg.innerHTML = '翻开的每一张，都是我想对你说的话。';
 
   $$('#grid .gcard').forEach(el => el.addEventListener('click', () => flip(el)));
 }
