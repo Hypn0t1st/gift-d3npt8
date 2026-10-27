@@ -242,6 +242,7 @@ button{font-family:inherit;cursor:pointer;color:inherit}
 .bday .bday-ico{font-size:22px;line-height:1;filter:drop-shadow(0 4px 10px rgba(255,160,120,.5))}
 .bday p{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.78);flex:1}
 .bday p b{color:#ffd9b0;font-weight:600}
+.bday-sub{display:block;margin-top:5px;font-size:11px;color:rgba(255,255,255,.38);letter-spacing:.04em}
 
 .quote{margin-top:14px;padding:20px 20px 18px;border-radius:20px;position:relative;
   background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
@@ -1166,9 +1167,10 @@ function renderHome(){
 
   const b = birthdayInfo();
   const bmd = `${b.target.getMonth() + 1} 月 ${b.target.getDate()} 日`;
+  const bSub = `<span class="bday-sub">${CONFIG.lunar.label} · ${bmd}</span>`;
   $('#bdayText').innerHTML = b.isToday
-    ? `今天就是你的生日 —— <b>生日快乐，${CONFIG.herName}</b> 🎉`
-    : `距离你的生日还有 <b>${b.days}</b> 天 · ${bmd}（${CONFIG.lunar.label}）`;
+    ? `今天就是你的生日 —— <b>生日快乐，${CONFIG.herName}</b> 🎉${bSub}`
+    : `距离你的生日还有 <b>${b.days}</b> 天${bSub}`;
 
   const ymd = ymdTogether();
   $('#ymdText').innerHTML = `在一起 <b>${ymd.y}</b> 年 <b>${ymd.m}</b> 个月 <b>${ymd.d}</b> 天`;
