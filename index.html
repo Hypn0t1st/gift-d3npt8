@@ -727,9 +727,9 @@ html.still .cover-name,html.still .cover-sub,html.still .cover-days,html.still .
         <div id="letterBody" style="display:none">
           <article class="paper">
             <h2 id="letterTitle">写给我的小宝</h2>
-            <p class="date" id="letterDate">2026.10.24</p>
+            <p class="date" id="letterDate">2026.10.28</p>
             <div id="letterParas"></div>
-            <p class="sign" id="letterSign">永远爱你的 老公</p>
+            <p class="sign" id="letterSign">永远爱你的 小胖老公</p>
             <div class="seal">爱</div>
           </article>
 
@@ -789,7 +789,7 @@ html.still .cover-name,html.still .cover-sub,html.still .cover-days,html.still .
    ========================================================================== */
 const CONFIG = {
   herName: "小宝",                  // 她的名字 / 昵称
-  myName: "老公",                   // 你的名字（情书落款用）
+  myName: "小胖",                   // 你的名字（情书落款用）
   startDate: "2022-10-24",          // 在一起的那一天  YYYY-MM-DD
   birthday: "10-28",                // 公历生日（农历表查不到时兜底）MM-DD
 
@@ -815,18 +815,17 @@ const CONFIG = {
     }
   },
 
-  // 情书
+  // 情书（正文是老公自己写的，别改）
   letter: {
     title: "写给我的小宝",
+    date: "2026.10.28",
     paragraphs: [
-      "写这封信的时候我在想，要怎么把「生日快乐」这四个字，说得比平常更郑重一点。",
-      "四年了。从 2022 年 10 月 24 日那天到现在，大部分日子都很普通，普通到说出来没什么可讲的——可我就是很喜欢这样的日子。",
-      "我这个人不太会说漂亮话。能给你的，大概就是往后每一个平常的晚上：一起吃饭，一起散步，一起把日子过成我们的样子。",
-      "所以今年，我还是那句老话——",
-      "生日快乐，小宝。",
-      "以后的每一年，我都在。"
+      "转眼已经四年时光，网聊、见面、逛吃、恋爱、订婚、结婚、旅行到平凡的生活，我们一直陪在对方身边。",
+      "我这个人还是不那么浪漫，甚至有点木讷。能给你的，就是长久的陪伴，哈哈哈。",
+      "我的宝贝老婆，生日快乐，往后余生，继续一起携手向前。",
+      "愿你身体健康，开开心心，好运常伴！"
     ],
-    sign: "永远爱你的 老公"
+    sign: "永远爱你的 小胖老公"
   },
 
   // 时光轴：只有日期 + 标题 + 照片，下面不写文字
@@ -1261,7 +1260,8 @@ function unlockLetter(){
 }
 function renderLetter(){
   $('#letterTitle').textContent = CONFIG.letter.title;
-  $('#letterDate').textContent = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'2-digit', day:'2-digit' }).replace(/\//g, '.');
+  $('#letterDate').textContent = CONFIG.letter.date ||
+    new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'2-digit', day:'2-digit' }).replace(/\//g, '.');
   $('#letterParas').innerHTML = CONFIG.letter.paragraphs.map(t => `<p>${t}</p>`).join('');
   $('#letterSign').textContent = CONFIG.letter.sign;
   $('#teaser').textContent = CONFIG.letter.paragraphs[0].slice(0, 40) + '……';
