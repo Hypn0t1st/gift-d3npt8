@@ -559,31 +559,6 @@ button{font-family:inherit;cursor:pointer;color:inherit}
 }
 .love-line.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
-.capsule{
-  margin-top:16px;padding:22px 20px;border-radius:22px;position:relative;overflow:hidden;
-  background:linear-gradient(160deg,rgba(130,108,210,.18),rgba(255,255,255,.03));
-  border:1px dashed rgba(190,175,255,.32);
-}
-.capsule h4{margin:0 0 7px;font-size:13.5px;font-weight:600;letter-spacing:.06em;display:flex;align-items:center;gap:7px}
-.capsule .sub{margin:0;font-size:11.5px;color:rgba(255,255,255,.42);line-height:1.85}
-.capsule .cd{display:flex;align-items:baseline;gap:6px;margin:16px 0 0}
-.capsule .cd b{
-  font-size:34px;font-weight:600;font-variant-numeric:tabular-nums;
-  background:linear-gradient(160deg,#fff,#bda6ff);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.capsule .cd span{font-size:12px;color:rgba(255,255,255,.4)}
-.capsule .sealed{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.3)}
-.capsule .sealed i{flex:1;height:1px;background:linear-gradient(90deg,rgba(190,175,255,.42),transparent)}
-.capsule.open{
-  border-style:solid;border-color:rgba(190,175,255,.24);
-  background:linear-gradient(160deg,#fffaf2,#ffeede);color:#4a2b24;
-  box-shadow:0 20px 44px rgba(0,0,0,.4);
-}
-.capsule.open h4{color:#5b3128}
-.capsule.open .para{font-family:var(--serif);font-size:14px;line-height:2.05;margin:12px 0 0;text-indent:2em;color:#54322a}
-.capsule.open .sign{margin:18px 0 0;text-align:right;font-family:var(--serif);font-size:13.5px;color:#7a4636}
-
 .tl-end{
   padding:22px 18px;border-radius:20px;text-align:center;
   border:1px dashed rgba(255,255,255,.16);background:rgba(255,255,255,.02);
@@ -748,11 +723,6 @@ html.still .cover-name,html.still .cover-sub,html.still .cover-days,html.still .
             <button class="blow" id="blowBtn">吹蜡烛</button>
             <p class="cake-msg" id="cakeMsg">生日快乐，我的姑娘。<br>愿你所愿皆成真，所行化坦途。</p>
           </div>
-
-          <div class="capsule" id="capsule">
-            <h4>✉️ <span id="capsuleTitle">时间胶囊</span></h4>
-            <div id="capsuleBody"></div>
-          </div>
         </div>
       </section>
 
@@ -865,19 +835,6 @@ const CONFIG = {
     "你是我在所有选择里，唯一不想重选的那一个。",
     "想和你一起，把平淡的日子过得闪闪发光。"
   ],
-
-  // 时间胶囊：一封「到日子才能拆」的信，unlock 写 YYYY-MM-DD，过了那天自动打开
-  capsule: {
-    unlock: "2027-10-18",
-    title: "一封要等到明年生日才能拆的信",
-    paragraphs: [
-      "如果你正在读这段话，说明又过了一年。这一年过得怎么样？有没有比去年开心一点？",
-      "写这封信的时候，我其实不知道明年会发生什么。也许会换个地方住，也许会很忙，也许会吵几次架。",
-      "但我很确定一件事：明年你生日这天，我还是会坐在这儿，想办法给你弄点新的花样。",
-      "所以，明年见。"
-    ],
-    sign: "一年后依然爱你的 老公"
-  },
 
   // 「想你了」按钮每次随机冒出来的一句
   missLines: [
@@ -1142,31 +1099,6 @@ function nextMilestone(){
     return { days: aLeft, name: `在一起 ${n} 周年`, date: aDate };
   }
   return { days: kLeft, name: `在一起第 ${nextK} 天`, date: kDate };
-}
-
-/* 时间胶囊 */
-function renderCapsule(){
-  const box = $('#capsule');
-  const wrap = $('#capsuleBody');
-  if (!box || !CONFIG.capsule) return;
-  const cp = CONFIG.capsule;
-  const [y, m, d] = cp.unlock.split('-').map(Number);
-  const target = new Date(y, m - 1, d, 0, 0, 0);
-  const left = Math.ceil((target - Date.now()) / 86400000);
-  $('#capsuleTitle').textContent = cp.title || '时间胶囊';
-
-  if (left > 0){
-    box.classList.remove('open');
-    wrap.innerHTML = `
-      <p class="sub">这封信被我封起来了，要等到 <b style="color:#d8c9ff">${y}.${pad(m)}.${pad(d)}</b>
-      那天才会自己打开。<br>在那之前，好好长大，好好吃饭。</p>
-      <div class="cd"><b>${left}</b><span>天后可以拆</span></div>
-      <div class="sealed"><i></i>SEALED<i></i></div>`;
-  }else{
-    box.classList.add('open');
-    wrap.innerHTML = cp.paragraphs.map(t => `<p class="para">${t}</p>`).join('') +
-      `<p class="sign">${cp.sign || ''}</p>`;
-  }
 }
 
 /* ---------- 首页 ---------- */
@@ -1464,7 +1396,6 @@ function init(){
   renderHome();
   renderTimeline();
   renderLetter();
-  renderCapsule();
   buildGame();
   startClock();
 
